@@ -1,13 +1,13 @@
 package info.laughingbuddha.logprocessor.producer.controller;
 
-import info.laughingbuddha.logprocessor.producer.model.LogEvent;
+import info.laughingbuddha.dto.LogEventDto;
 import info.laughingbuddha.logprocessor.producer.service.KafkaProducerService;
+import info.laughingbuddha.utils.UlidGenerator;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,14 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/logs")
 public class LogEventController {
 
-    private static final Logger logger = LoggerFactory.getLogger(LogEventController.class);
-
     @Autowired
     private KafkaProducerService kafkaProducerService;
+
+    @Autowired
+    private UlidGenerator ulidGenerator;
 
     private final Counter logCounter;
 
@@ -37,17 +39,17 @@ public class LogEventController {
     @PostMapping
     @Timed(value = "log_event_processing_time", description = "Time taken to process log event")
     @CircuitBreaker(name = "kafka-producer", fallbackMethod = "fallbackLogEvent")
-    public ResponseEntity<Map<String, String>> createLogEvent(@RequestBody LogEvent logEvent) {
+    public ResponseEntity<Map<String, String>> createLogEvent(@RequestBody LogEventDto logEvent) {
         try {
             // Generate Id if not provided
             if (logEvent.getId() == null) {
-                logEvent.setId(java.util.UUID.randomUUID().toString());
+                logEvent.setId(ulidGenerator.generateUlid());
             }
 
             kafkaProducerService.sendLogEvent(logEvent);
             logCounter.increment();
 
-            logger.info("Log event created: {}", logEvent.getId());
+            log.info("Log event created: {}", logEvent.getId());
 
             return ResponseEntity.ok().body(Map.of(
                     "status", "success",
@@ -55,14 +57,14 @@ public class LogEventController {
                     "message", "Log event queued for processing"
             ));
         } catch (Exception e) {
-            logger.error("Failed to create log event: {}", logEvent.getId(), e);
+            log.error("Failed to create log event: {}", logEvent.getId(), e);
             return ResponseEntity.internalServerError()
                     .body(Map.of("status", "error", "message", "Failed to process log event"));
         }
     }
 
-    public ResponseEntity<Map<String, String>> fallbackLogEvent(LogEvent logEvent, Exception ex) {
-        logger.warn("Circuit breaker activated for log event: {}", logEvent.getId(), ex);
+    public ResponseEntity<Map<String, String>> fallbackLogEvent(LogEventDto logEvent, Exception ex) {
+        log.warn("Circuit breaker activated for log event: {}", logEvent.getId(), ex);
         return ResponseEntity.status(503)
                 .body(Map.of(
                         "status", "service_unavailable",

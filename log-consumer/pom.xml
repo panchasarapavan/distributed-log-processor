@@ -12,6 +12,7 @@
             <version>1.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Add any log-consumer specific dependencies here if needed -->
     </dependencies>
 
     <parent>
