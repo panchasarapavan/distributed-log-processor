@@ -1,4 +1,4 @@
-package info.laughingbuddha.model;
+package info.laughingbuddha.logprocessor.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import info.laughingbuddha.utils.AutoUlid;
@@ -33,6 +33,10 @@ public class LogEvent {
     @Column(name = "timestamp", nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime timestamp;
+
+    @Column(name = "processed_at")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime processedAt;
 
     @PrePersist
     public void prePersist() {
