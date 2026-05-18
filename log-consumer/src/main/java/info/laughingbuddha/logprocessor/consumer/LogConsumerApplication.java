@@ -8,8 +8,8 @@ import org.springframework.retry.annotation.EnableRetry;
 
 @SpringBootApplication
 @EnableRetry
-@EntityScan(basePackages = "info.laughingbuddha.model")
-@EnableJpaRepositories(basePackages = "info.laughingbuddha.repository")
+@EntityScan(basePackages = "info.laughingbuddha.logprocessor.model")
+@EnableJpaRepositories(basePackages = "info.laughingbuddha.logprocessor.repository")
 public class LogConsumerApplication {
     public static void main(String[] args) {
         SpringApplication.run(LogConsumerApplication.class, args);

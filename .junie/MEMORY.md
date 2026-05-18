@@ -19,8 +19,12 @@ The project is initialized with a microservices architecture for log processing.
 - Updated Prometheus configuration to scrape metrics from the new exporters.
 - Fixed Prometheus DNS resolution errors by explicitly defining `log-network` and ensuring all services are on the same network.
 - Added restart policies and dependencies to improve infrastructure stability.
+- Implemented `log-generator` scripts in Python and PowerShell to simulate log traffic within rate limits.
+- Installed Python 3.12 and `requests` library in the environment.
+- Configured a shared IntelliJ Run Configuration for the Python log generator.
+- Added `scripts/requirements.txt` to facilitate Python interpreter setup in IntelliJ.
+- Troubleshooting: Provided detailed instructions and the exact executable path for resolving "Python interpreter is not selected" in IntelliJ.
 
 ### Next Steps
 - Implement core logic for `log-producer` and `log-consumer`.
 - Set up database schemas in PostgreSQL.
-- Implement `log-generator` for testing.

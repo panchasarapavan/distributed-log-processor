@@ -27,3 +27,4 @@ replay_pid*
 /log-producer/target/classes/application.yml
 /codebase/
 /api-gateway/target/
+/.run/

@@ -14,8 +14,8 @@ This project is a microservices-based distributed log processing system.
 - `api-gateway`: Spring Cloud Gateway for routing and entry point.
 - `log-producer`: Service responsible for receiving log events and publishing them to Kafka.
 - `log-consumer`: Service that consumes log events from Kafka for processing and persistence.
+- `log-generator`: Python and PowerShell scripts for generating simulated log traffic.
 - `shared-domain`: Shared library containing common models, DTOs, and utilities.
-- `log-generator`: (Planned) Tool for generating simulated log traffic.
 
 ## Infrastructure (`docker-compose.yml`)
 - **Kafka**: Accessible at `localhost:9092`. Topic used: `log-events`.
@@ -38,6 +38,20 @@ This project is a microservices-based distributed log processing system.
 - **API Gateway**: `http://localhost:8080`
 - **Log Producer**: `http://localhost:8081` (Routes: `/api/logs/**`)
 - **Log Consumer**: `http://localhost:8082` (Routes: `/consumer/health`)
+
+## Tools
+- **Log Generator (Python)**: `python .\scripts\log-generator.py`
+    - Parameters: `--url`, `--rate` (default 10), `--total` (default 100).
+    - Requires: `requests` library (`pip install requests`).
+    - **IntelliJ**: A shared run configuration "Log Generator" is available in the `.run` directory.
+        - **If you see "Python interpreter is not selected"**:
+            1. Open `scripts/log-generator.py` in the editor.
+            2. Look for a yellow banner at the top: "Python interpreter is not configured". Click **Configure Python interpreter**.
+            3. In the dialog, select **Add Interpreter** -> **System Interpreter**.
+            4. Click the **...** button and paste this path: `C:\Users\panch\AppData\Local\Programs\Python\Python312\python.exe`
+            5. If you don't see these options, ensure the **Python** plugin is installed (**File > Settings > Plugins**).
+- **Log Generator (PowerShell)**: `.\scripts\log-generator.ps1`
+    - Parameters: `-Url`, `-RateLimit` (default 10), `-TotalLogs` (default 100).
 
 ## Development Guidelines
 - Follow Spring Boot best practices.

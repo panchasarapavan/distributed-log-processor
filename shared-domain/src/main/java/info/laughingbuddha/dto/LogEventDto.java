@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+import com.github.f4b6a3.ulid.UlidCreator;
 
 @Data
 public class LogEventDto {
@@ -19,6 +19,6 @@ public class LogEventDto {
 
     public LogEventDto() {
         this.timestamp = LocalDateTime.now();
-        this.id = UUID.randomUUID().toString();
+        this.id = UlidCreator.getMonotonicUlid().toString();
     }
 }
